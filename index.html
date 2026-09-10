@@ -3,140 +3,443 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>PHANES — Governed by time</title>
-<meta name="description" content="PHANES. Fixed-supply emission on Base. Primary buys seed locked liquidity."/>
+<title>PHANES</title>
+<meta name="description" content="PHANES — timed emergence protocol on Base."/>
 <style>
-:root{
-  --bg:#03050a;--text:#eef3fb;--muted:#8b95a8;--line:rgba(120,160,255,.14);
-  --cyan:#6ee7ff;--violet:#8b5cff;--card:rgba(10,14,24,.72);--glow:rgba(110,231,255,.18);
-}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#03050c;--panel:rgba(8,14,28,.78);--line:rgba(0,220,255,.14);
+  --cyan:#00e5ff;--cyan-dim:rgba(0,229,255,.55);--violet:#7b5cff;
+  --text:#e8f4ff;--muted:#7a8ba3;
+}
 html{scroll-behavior:smooth}
 body{
   background:var(--bg);color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.5;
-  background-image:
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(139,92,255,.22), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(110,231,255,.08), transparent 45%);
+  font-family:'Rajdhani',system-ui,sans-serif;
+  min-height:100vh;overflow-x:hidden;line-height:1.5;
 }
-a{color:var(--cyan);text-decoration:none}a:hover{color:#fff}
-.nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 4vw;border-bottom:1px solid var(--line);background:rgba(3,5,10,.78);backdrop-filter:blur(14px)}
-.brand{letter-spacing:.32em;font-size:.78rem;text-transform:uppercase}
-.brand small{display:block;color:var(--muted);letter-spacing:.1em;font-size:.62rem;margin-top:.15rem;text-transform:none}
-.navlinks{display:flex;gap:1.4rem;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
-.navlinks a{color:var(--muted)}.cta{border:1px solid rgba(110,231,255,.45);color:var(--cyan);
-  padding:.55rem 1rem;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;border-radius:999px}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;align-items:center;padding:4rem 4vw 3rem;min-height:80vh}
-.kicker{color:var(--cyan);letter-spacing:.28em;font-size:.72rem;text-transform:uppercase;margin-bottom:1rem}
-h1{font-size:clamp(3rem,7vw,5.2rem);font-weight:500;letter-spacing:.08em;line-height:1.02;margin-bottom:1rem}
-.lead{color:var(--muted);max-width:34rem;font-size:1.05rem;line-height:1.7}
-.panel{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:1.4rem 1.5rem}
-.panel h2{font-size:.7rem;letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
-.panel .date{font-size:1.7rem;margin:.35rem 0 .2rem}
-.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin:1rem 0}
-.cd div{background:rgba(0,0,0,.4);border:1px solid var(--line);padding:.65rem .2rem;text-align:center;border-radius:10px}
-.cd strong{display:block;font-size:1.15rem;color:var(--cyan)}
-.cd span{font-size:.58rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-.checks{font-size:.82rem;color:var(--muted);line-height:1.85}
-.checks i{color:var(--cyan);font-style:normal;margin-right:.4rem}
-section{padding:3.5rem 4vw;border-top:1px solid var(--line)}
-.section-label{color:var(--muted);letter-spacing:.28em;font-size:.68rem;text-transform:uppercase;margin-bottom:.75rem}
-section h3{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:500;margin-bottom:1rem;max-width:40rem}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.3rem}
-.card{border:1px solid var(--line);background:rgba(8,12,20,.65);border-radius:16px;padding:1.2rem}
-.card .n{color:var(--cyan);font-size:.68rem;letter-spacing:.2em;margin-bottom:.5rem}
-.card h4{margin-bottom:.4rem}.card p{color:var(--muted);font-size:.88rem;line-height:1.65}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.2rem}
-.metric{border:1px solid var(--line);border-radius:14px;padding:1.1rem;text-align:center;background:rgba(0,0,0,.25)}
-.metric strong{display:block;font-size:1.8rem;color:var(--cyan)}.metric span{font-size:.7rem;letter-spacing:.14em;color:var(--muted)}
-.addr{margin-top:1rem;padding:1rem;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.35);
-  font-family:ui-monospace,monospace;font-size:.78rem;word-break:break-all}
-.addr span{display:block;color:var(--muted);font-size:.62rem;letter-spacing:.14em;margin-bottom:.35rem;font-family:inherit}
-.note{margin-top:1rem;color:var(--muted);font-size:.85rem;max-width:40rem;line-height:1.65}
-.foot{padding:1.4rem 4vw 2rem;border-top:1px solid var(--line);font-size:.68rem;letter-spacing:.1em;color:var(--muted);
-  display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between}
-@media(max-width:960px){.hero,.grid3,.split{grid-template-columns:1fr}.navlinks{display:none}}
+a{color:var(--cyan);text-decoration:none;transition:.2s}
+a:hover{color:#fff;text-shadow:0 0 16px rgba(0,229,255,.5)}
+
+/* LAB ROOM */
+.lab-room{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#050810 0%,#0a101c 40%,#080c14 100%)}
+.lab-room .wall-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,180,220,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,220,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,#000 20%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,#000 20%,transparent 75%)}
+.lab-room .floor{position:absolute;left:0;right:0;bottom:0;height:42%;background:linear-gradient(180deg,transparent,rgba(0,30,50,.35) 30%,rgba(2,8,16,.92));transform:perspective(400px) rotateX(62deg);transform-origin:center bottom}
+.lab-room .floor-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,200,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.07) 1px,transparent 1px);background-size:40px 40px;opacity:.7}
+.lab-room .wall-left,.lab-room .wall-right{position:absolute;top:0;bottom:20%;width:18%;background:linear-gradient(90deg,rgba(0,20,35,.55),transparent)}
+.lab-room .wall-right{right:0;left:auto;background:linear-gradient(-90deg,rgba(0,20,35,.55),transparent)}
+.lab-room .ceiling{position:absolute;top:0;left:0;right:0;height:18%;background:linear-gradient(180deg,rgba(0,0,0,.65),transparent)}
+.lab-room .light-bar{position:absolute;top:4%;left:20%;right:20%;height:3px;background:linear-gradient(90deg,transparent,rgba(0,220,255,.35),rgba(120,80,255,.25),rgba(0,220,255,.35),transparent);box-shadow:0 0 30px rgba(0,200,255,.25);animation:labpulse 5s ease-in-out infinite}
+.lab-room .light-bar.b{top:auto;bottom:28%;opacity:.4;animation-delay:1.5s}
+@keyframes labpulse{0%,100%{opacity:.55}50%{opacity:1}}
+.lab-room .server-rack{position:absolute;bottom:8%;width:56px;border:1px solid rgba(0,180,220,.12);background:linear-gradient(180deg,rgba(10,18,30,.8),rgba(4,8,16,.9))}
+.lab-room .server-rack.l{left:3%;height:38%}
+.lab-room .server-rack.r{right:3%;height:42%}
+.lab-room .server-rack i{display:block;height:3px;margin:6px 6px;background:linear-gradient(90deg,rgba(0,229,255,.15),rgba(0,229,255,.45),rgba(0,229,255,.1));animation:rack 2.4s ease-in-out infinite}
+.lab-room .server-rack i:nth-child(2){animation-delay:.3s}
+.lab-room .server-rack i:nth-child(3){animation-delay:.6s}
+.lab-room .server-rack i:nth-child(4){animation-delay:.9s}
+@keyframes rack{0%,100%{opacity:.35}50%{opacity:1}}
+
+#fx{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none}
+.scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);opacity:.22}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 75% 65% at 50% 45%,transparent 30%,rgba(0,0,0,.65) 100%)}
+.wrap{position:relative;z-index:3}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 5vw;border-bottom:1px solid var(--line);background:rgba(3,5,12,.75);backdrop-filter:blur(18px);position:sticky;top:0;z-index:20}
+.logo{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.4em}
+.logo span{color:var(--cyan)}
+nav .links{display:flex;gap:1.6rem}
+nav .links a{font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+nav .links a:hover{color:var(--cyan)}
+.btn-nav{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.15em;border:1px solid var(--cyan);color:var(--cyan);padding:.55rem 1.1rem;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);box-shadow:0 0 20px rgba(0,229,255,.12)}
+.btn-nav:hover{background:rgba(0,229,255,.1);color:#fff}
+
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1.05fr;gap:2rem;align-items:center;padding:2.5rem 5vw 3rem}
+.tag{display:inline-flex;align-items:center;gap:.45rem;font-size:.72rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-dim);margin-bottom:1.2rem}
+h1{font-family:'Orbitron',sans-serif;font-size:clamp(2.6rem,6.5vw,4.4rem);font-weight:700;letter-spacing:.18em;line-height:1.1;margin-bottom:1.1rem;background:linear-gradient(180deg,#fff 10%,#7ad4ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:1.2rem;font-weight:500;color:var(--muted);max-width:30rem;line-height:1.65;margin-bottom:1.2rem}
+.morph{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:.2em;color:var(--cyan);min-height:1.4em;margin-bottom:1.4rem;text-transform:uppercase}
+.actions{display:flex;flex-wrap:wrap;gap:.8rem}
+.btn-main{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.14em;background:linear-gradient(135deg,rgba(0,229,255,.25),rgba(123,92,255,.3));border:1px solid rgba(0,229,255,.5);color:#fff;padding:.8rem 1.5rem;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);box-shadow:0 0 40px rgba(0,229,255,.15)}
+.btn-ghost{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.14em;border:1px solid rgba(255,255,255,.12);color:var(--muted);padding:.8rem 1.3rem;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+
+/* invention: signal strip */
+.signal{
+  margin-top:1.6rem;max-width:28rem;
+  border:1px solid rgba(0,229,255,.15);
+  background:rgba(0,10,20,.55);
+  padding:.7rem .85rem;
+  font-family:'Orbitron',monospace;
+  font-size:.58rem;letter-spacing:.08em;
+  color:var(--cyan-dim);
+  min-height:3.2rem;
+}
+.signal b{color:var(--muted);font-weight:500}
+
+/* chamber */
+.chamber-wrap{position:relative;height:min(78vh,560px);display:grid;place-items:center}
+.chamber{
+  position:relative;width:min(90%,340px);height:min(70vh,420px);
+  border:1px solid rgba(0,229,255,.2);
+  background:linear-gradient(180deg,rgba(0,40,60,.25),rgba(5,8,20,.85));
+  clip-path:polygon(12% 0,88% 0,100% 10%,100% 90%,88% 100%,12% 100%,0 90%,0 10%);
+  box-shadow:0 0 60px rgba(0,229,255,.08),inset 0 0 40px rgba(0,100,140,.12);
+  display:grid;place-items:center;overflow:hidden;
+  transition:box-shadow .3s,border-color .3s;
+}
+.chamber.hot{border-color:rgba(0,229,255,.45);box-shadow:0 0 80px rgba(0,229,255,.18),inset 0 0 50px rgba(0,150,200,.15)}
+.chamber::before{content:"";position:absolute;inset:8px;border:1px solid rgba(0,229,255,.08);clip-path:polygon(12% 0,88% 0,100% 10%,100% 90%,88% 100%,12% 100%,0 90%,0 10%);pointer-events:none}
+.chamber-top{position:absolute;top:0;left:0;right:0;padding:.55rem .8rem;display:flex;justify-content:space-between;align-items:center;font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:.14em;color:var(--cyan-dim);border-bottom:1px solid rgba(0,229,255,.1);background:rgba(0,20,30,.5)}
+.chamber-top .pulse{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.chamber-bottom{position:absolute;bottom:0;left:0;right:0;padding:.5rem .8rem;font-family:'Orbitron',sans-serif;font-size:.5rem;letter-spacing:.12em;color:var(--muted);border-top:1px solid rgba(0,229,255,.1);background:rgba(0,15,25,.55);display:flex;justify-content:space-between}
+.ring{position:absolute;border:1px solid rgba(0,229,255,.15);border-radius:50%;animation:spin 25s linear infinite}
+.ring.a{width:210px;height:210px}
+.ring.b{width:250px;height:250px;animation-duration:40s;animation-direction:reverse;border-style:dashed;border-color:rgba(123,92,255,.2)}
+.ring.c{width:170px;height:170px;animation-duration:18s;border-color:rgba(0,229,255,.08)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.egg{width:110px;height:145px;position:relative;z-index:2;animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(0,200,255,.25));transition:filter .3s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.egg-shell{position:absolute;inset:0;border-radius:50% 50% 48% 48%/58% 58% 42% 42%;background:radial-gradient(ellipse 70% 40% at 30% 25%,rgba(255,255,255,.35),transparent 50%),linear-gradient(150deg,#8ec8e8 0%,#4a7a98 30%,#2a4058 55%,#6a9ab8 80%,#c0e0f0 100%);box-shadow:inset 0 -15px 30px rgba(0,40,80,.5),inset 0 10px 20px rgba(255,255,255,.25),0 0 30px rgba(0,200,255,.2)}
+.egg-frost{position:absolute;inset:0;border-radius:50% 50% 48% 48%/58% 58% 42% 42%;background:linear-gradient(125deg,transparent 40%,rgba(200,240,255,.12) 45%,transparent 50%);animation:sheen 5s ease-in-out infinite}
+@keyframes sheen{0%,100%{opacity:.6}50%{opacity:1}}
+.beam{position:absolute;width:2px;height:40%;top:5%;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,rgba(0,229,255,.5),transparent);animation:beam 3s ease-in-out infinite}
+@keyframes beam{0%,100%{opacity:.3;height:35%}50%{opacity:.8;height:45%}}
+
+/* invention: chronometer ring */
+.chrono{
+  position:absolute;right:8%;top:18%;
+  width:88px;height:88px;
+  font-family:'Orbitron',sans-serif;
+  z-index:4;
+}
+.chrono svg{width:100%;height:100%;transform:rotate(-90deg)}
+.chrono circle{fill:none;stroke-width:3}
+.chrono .track{stroke:rgba(0,229,255,.12)}
+.chrono .prog{stroke:var(--cyan);stroke-linecap:round;transition:stroke-dashoffset 1s linear;filter:drop-shadow(0 0 6px rgba(0,229,255,.6))}
+.chrono .lbl{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:.48rem;letter-spacing:.08em;color:var(--muted);line-height:1.3}
+.chrono .lbl strong{display:block;font-size:.7rem;color:var(--cyan);letter-spacing:.06em}
+
+/* invention: integrity bar */
+.integrity{
+  position:absolute;left:6%;bottom:12%;
+  width:120px;z-index:4;
+  font-family:'Orbitron',sans-serif;font-size:.5rem;letter-spacing:.1em;color:var(--muted);
+}
+.integrity .bar{height:4px;background:rgba(0,229,255,.1);margin-top:.35rem;overflow:hidden}
+.integrity .bar i{display:block;height:100%;width:97%;background:linear-gradient(90deg,var(--cyan),var(--violet));box-shadow:0 0 10px rgba(0,229,255,.5);animation:integrity 8s ease-in-out infinite}
+@keyframes integrity{0%,100%{width:96.2%}50%{width:98.8%}}
+
+section{padding:4.5rem 5vw;border-top:1px solid var(--line);position:relative}
+.sec-label{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.28em;color:var(--cyan-dim);margin-bottom:.8rem}
+h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,3vw,1.85rem);font-weight:600;letter-spacing:.08em;margin-bottom:1rem;max-width:36rem;line-height:1.35}
+.prose{color:var(--muted);font-size:1.1rem;font-weight:500;max-width:36rem;line-height:1.7}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.8rem}
+.card{background:var(--panel);border:1px solid var(--line);padding:1.3rem 1.2rem;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:border-color .25s,box-shadow .25s,transform .25s}
+.card:hover{border-color:rgba(0,229,255,.35);box-shadow:0 0 30px rgba(0,229,255,.08);transform:translateY(-3px)}
+.card .ico{font-size:1.3rem;margin-bottom:.55rem}
+.card h3{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.12em;margin-bottom:.45rem;color:#c8e8f8}
+.card p{font-size:.95rem;color:var(--muted);font-weight:500;line-height:1.55}
+
+/* invention: observer terminal */
+.terminal{
+  margin-top:2rem;max-width:40rem;
+  background:rgba(0,8,16,.85);
+  border:1px solid rgba(0,229,255,.18);
+  font-family:'Orbitron',ui-monospace,monospace;
+  font-size:.65rem;letter-spacing:.06em;
+  color:var(--cyan-dim);
+}
+.terminal .hd{padding:.5rem .8rem;border-bottom:1px solid rgba(0,229,255,.12);display:flex;justify-content:space-between;color:var(--muted)}
+.terminal .bd{padding:.8rem;min-height:7rem;line-height:1.7}
+.terminal .bd span{color:var(--muted)}
+
+.panel{margin-top:1.5rem;padding:1.2rem 1.3rem;background:var(--panel);border:1px solid var(--line);max-width:42rem}
+.addr{font-family:'Orbitron',ui-monospace,monospace;font-size:.68rem;word-break:break-all;color:var(--cyan-dim)}
+.addr-label{font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:.16em;color:var(--muted);display:block;margin-bottom:.3rem}
+
+/* invention: myth/tech lexicon flip cards */
+.lexicon{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:1.5rem;max-width:44rem}
+.lex{border:1px solid var(--line);background:rgba(0,10,20,.6);padding:.85rem;text-align:center;cursor:default;transition:.3s}
+.lex:hover{border-color:rgba(0,229,255,.4);background:rgba(0,40,60,.35)}
+.lex .a{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:.14em;color:var(--cyan)}
+.lex .b{font-size:.85rem;color:var(--muted);margin-top:.25rem}
+
+footer{padding:1.5rem 5vw 2rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:.16em;color:var(--muted)}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:1.5rem}
+  .chamber-wrap{height:380px;order:-1}
+  .cards,.lexicon{grid-template-columns:1fr 1fr}
+  nav .links{display:none}
+  .chrono,.integrity{display:none}
+}
 </style>
 </head>
 <body>
-<header class="nav">
-  <div class="brand">PHANES<small>A protocol governed by time</small></div>
-  <nav class="navlinks">
-    <a href="/buy/">Buy</a>
-    <a href="#liquidity">Liquidity</a>
-    <a href="#schedule">Schedule</a>
-    <a href="#contracts">Contracts</a>
-  </nav>
-  <a class="cta" href="/buy/">Primary sale</a>
+<div class="lab-room" aria-hidden="true">
+  <div class="ceiling"></div>
+  <div class="light-bar"></div>
+  <div class="light-bar b"></div>
+  <div class="wall-grid"></div>
+  <div class="wall-left"></div>
+  <div class="wall-right"></div>
+  <div class="floor"><div class="floor-grid"></div></div>
+  <div class="server-rack l"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="server-rack r"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<canvas id="fx"></canvas>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<div class="wrap">
+<nav>
+  <div class="logo">PHA<span>NES</span></div>
+  <div class="links">
+    <a href="#origin">Origin</a>
+    <a href="#machine">Machine</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#deploy">Deploy</a>
+  </div>
+  <a class="btn-nav" href="/buy/">SALE ↗</a>
+</nav>
+
+<header class="hero">
+  <div>
+    <div class="tag">✦ &nbsp; BASE &nbsp; · &nbsp; ⏳ CHRONOS GATE &nbsp; · &nbsp; 🜂 LAB-01</div>
+    <h1>PHANES</h1>
+    <p class="morph" id="morph">PROTOGONOS</p>
+    <p class="lead">
+      Not another token page — a containment narrative.
+      The silver egg sits under Chronos lock until the hour the machine already knows.
+    </p>
+    <div class="actions">
+      <a class="btn-main" href="/buy/">ENTER PRIMARY SALE</a>
+      <a class="btn-ghost" href="#origin">READ THE MYTH ☽</a>
+    </div>
+    <div class="signal"><b>INCOMING · OBSERVATION FEED</b><br/><span id="signal">…calibrating spectral shell…</span></div>
+  </div>
+
+  <div class="chamber-wrap">
+    <div class="chrono" title="Temporal distance to KHAOS">
+      <svg viewBox="0 0 36 36">
+        <circle class="track" cx="18" cy="18" r="15.5"></circle>
+        <circle class="prog" id="chronoProg" cx="18" cy="18" r="15.5" stroke-dasharray="97.4" stroke-dashoffset="97.4"></circle>
+      </svg>
+      <div class="lbl"><div><strong id="chronoDays">—</strong>DAYS TO<br/>KHAOS</div></div>
+    </div>
+    <div class="integrity">CONTAINMENT<br/><div class="bar"><i></i></div></div>
+    <div class="chamber" id="chamber">
+      <div class="chamber-top">
+        <span>CHRONOS / CONTAINMENT</span>
+        <span class="pulse"></span>
+      </div>
+      <div class="beam"></div>
+      <div class="ring a"></div>
+      <div class="ring b"></div>
+      <div class="ring c"></div>
+      <div class="egg" id="egg">
+        <div class="egg-shell"></div>
+        <div class="egg-frost"></div>
+      </div>
+      <div class="chamber-bottom">
+        <span>UNIT · SILVER EGG</span>
+        <span id="eggState">STATE · SEALED</span>
+      </div>
+    </div>
+  </div>
 </header>
 
-<section class="hero">
-  <div>
-    <p class="kicker">Base · Fixed supply · Buy-funded liquidity</p>
-    <h1>PHANES</h1>
-    <p class="lead">Primary purchases are meant to build the market: most of each buy seeds locked Uniswap liquidity. A small, explicit cut supports the founder.</p>
-  </div>
-  <div class="panel" id="buy">
-    <h2>Next supported sale model (RC11)</h2>
-    <div class="date">5% / 95%</div>
-    <div class="checks" style="margin-top:.8rem">
-      <div><i>✓</i> <strong>5%</strong> of buy USDC → founder</div>
-      <div><i>✓</i> <strong>95%</strong> of buy USDC + matching PHN → Uniswap pool</div>
-      <div><i>✓</i> LP position non-withdrawable / time-locked</div>
-      <div><i>✓</i> Fixed 21,000,000 PHN supply</div>
-    </div>
-    <p class="note">RC11 is live on Base with 5/95 buy routing into PoolSeed (Uniswap V3 seed function wired). Primary buys open on the published KHAOS schedule.</p>
+<section id="origin">
+  <p class="sec-label">01 &nbsp;// &nbsp;ORIGIN MYTH</p>
+  <h2>THE EGG WAS NEVER A LOGO</h2>
+  <p class="prose">
+    Orphic night. A cosmic egg. Phanes — first light — cracks the unmanifest and the world begins.
+    We took that structure seriously: sealed supply, a public hour, then irreversible day. 🌌 🥚 ⚡
+  </p>
+  <div class="lexicon" id="lexicon">
+    <div class="lex"><div class="a">MYTH</div><div class="b">Night</div></div>
+    <div class="lex"><div class="a">MACHINE</div><div class="b">Pre-window</div></div>
+    <div class="lex"><div class="a">MYTH</div><div class="b">Chronos</div></div>
+    <div class="lex"><div class="a">MACHINE</div><div class="b">Block time</div></div>
   </div>
 </section>
 
-<section id="liquidity">
-  <p class="section-label">01 · Liquidity design</p>
-  <h3>Curve buys should deepen the pool, not fill a dead vault.</h3>
-  <div class="split">
-    <div class="metric"><strong>5%</strong><span>FOUNDER USDC</span></div>
-    <div class="metric"><strong>95%</strong><span>LOCKED POOL SEED</span></div>
+<section id="machine">
+  <p class="sec-label">02 &nbsp;// &nbsp;THE MACHINE</p>
+  <h2>WHAT MAKES THIS DIFFERENT</h2>
+  <p class="prose">
+    Most launches shout. This one waits. The chamber is the product:
+    time-gated emission, liquidity that is not an afterthought, rewards that cannot be silently emptied. 🔮 🛰️
+  </p>
+  <div class="cards">
+    <div class="card"><div class="ico">🔒</div><h3>SEALED SUPPLY</h3><p>Fixed 21M. No owner mint. No upgrade switch. The curve runs as deployed.</p></div>
+    <div class="card"><div class="ico">🛰️</div><h3>LIVE LIQUIDITY PATH</h3><p>Primary flow is built to feed pool infrastructure — so open market is a designed stage, not a hope.</p></div>
+    <div class="card"><div class="ico">⚖️</div><h3>DUAL-CONTROL RELEASES</h3><p>Ecosystem PHN moves through campaigns and review — not a single-key drain.</p></div>
   </div>
-  <div class="grid3">
-    <div class="card"><div class="n">/ 01</div><h4>Founder cut</h4><p>Five percent of each primary purchase in USDC. Stated up front — not hidden.</p></div>
-    <div class="card"><div class="n">/ 02</div><h4>Market seed</h4><p>Ninety-five percent of buy USDC is paired with matching PHN into a Uniswap pool on Base.</p></div>
-    <div class="card"><div class="n">/ 03</div><h4>Locked LP</h4><p>Protocol liquidity is non-withdrawable or time-locked so it cannot be pulled as a soft rug.</p></div>
-  </div>
-  <div class="grid3" style="margin-top:1rem">
-    <div class="card"><div class="n">/ 04</div><h4>Reward releases</h4><p>Security and ecosystem PHN leave the rewards vault only through campaigns, reviewer checks, and recipient claims — not a free founder withdraw.</p></div>
-    <div class="card"><div class="n">/ 05</div><h4>RC11 only</h4><p>The supported public sale and liquidity path points exclusively to the armed RC11 Base mainnet deployment.</p></div>
-    <div class="card"><div class="n">/ 06</div><h4>Pool seed</h4><p>PoolSeed.seedUniswapV3 can be called once buy-funded USDC+PHN balances exist; the LP NFT goes to the permanent lock.</p></div>
-  </div>
-</section>
-
-<section id="schedule">
-  <p class="section-label">02 · Schedule intent</p>
-  <h3>Time still governs the stages.</h3>
-  <div class="grid3">
-    <div class="card"><div class="n">KHAOS</div><h4>Opening</h4><p>Primary issuance begins on the published schedule. Exact RC11 timestamps ship with the RC11 deploy record.</p></div>
-    <div class="card"><div class="n">POOL</div><h4>Buy → liquidity</h4><p>Each primary buy routes 95% USDC + matching PHN toward the locked pool under RC11 rules.</p></div>
-    <div class="card"><div class="n">MARKET</div><h4>Secondary</h4><p>Once transfers and pool depth exist, PHN can trade on open Base markets — separate from the curve.</p></div>
+  <div class="terminal">
+    <div class="hd"><span>OBSERVER LOG · LAB-01</span><span id="termClock">00:00:00</span></div>
+    <div class="bd" id="term"></div>
   </div>
 </section>
 
-<section id="contracts">
-  <p class="section-label">03 · Contracts</p>
-  <h3>Know which address is which.</h3>
-  <div class="addr">
-    <span>RC11 SUPPORTED CORE · BASE MAINNET · ARMED</span>
-    <a href="https://basescan.org/address/0xf2005da8a244012b324fC3E183f4D89626D0B000" target="_blank" rel="noopener">0xf2005da8a244012b324fC3E183f4D89626D0B000</a>
+<section id="timeline">
+  <p class="sec-label">03 &nbsp;// &nbsp;GATES</p>
+  <h2>TIME IS THE AUTHORITY</h2>
+  <div class="cards">
+    <div class="card"><div class="ico">🕳️</div><h3>KHAOS</h3><p>21 Dec 2026 · 20:50 UTC — primary issuance may open.</p></div>
+    <div class="card"><div class="ico">🔓</div><h3>TRANSFER</h3><p>23 Dec 2026 · 20:50 UTC — holder transfers unlock.</p></div>
+    <div class="card"><div class="ico">📡</div><h3>DEPTH</h3><p>Open-market depth follows the pool path once seeded.</p></div>
   </div>
-  <div class="addr">
-    <span>RC11 POOLSEED · BASE MAINNET</span>
-    <a href="https://basescan.org/address/0x0dC964cA2f2672C04cFc1D1139446497799d83CD" target="_blank" rel="noopener">0x0dC964cA2f2672C04cFc1D1139446497799d83CD</a>
-  </div>
-  <p class="note">The public website and sale interface are configured exclusively for RC11. No legacy deployment is used for the supported sale path.</p>
-  <p class="note">Security contact: <a href="mailto:phanessecurity@proton.me">phanessecurity@proton.me</a></p>
 </section>
 
-<footer class="foot">
-  <span>PHANES · Base</span>
-  <span>RC11 live · 5% founder · 95% locked pool</span>
+<section id="deploy">
+  <p class="sec-label">04 &nbsp;// &nbsp;DEPLOYMENT</p>
+  <h2>RC11 · BASE</h2>
+  <p class="prose">Armed. Sourcify exact match. One supported core for the public path.</p>
+  <div class="panel">
+    <span class="addr-label">CORE</span>
+    <a class="addr" href="https://basescan.org/address/0xf2005da8a244012b324fC3E183f4D89626D0B000" target="_blank" rel="noopener">0xf2005da8a244012b324fC3E183f4D89626D0B000</a>
+  </div>
+  <div class="panel">
+    <span class="addr-label">POOLSEED</span>
+    <a class="addr" href="https://basescan.org/address/0x0dC964cA2f2672C04cFc1D1139446497799d83CD" target="_blank" rel="noopener">0x0dC964cA2f2672C04cFc1D1139446497799d83CD</a>
+  </div>
+  <p class="prose" style="margin-top:1.2rem;font-size:.95rem">Security · <a href="mailto:phanessecurity@proton.me">phanessecurity@proton.me</a></p>
+</section>
+
+<footer>
+  <span>PHANES // LAB-01</span>
+  <span>EGG · CHAMBER · HOUR</span>
 </footer>
+</div>
+
+<script>
+(function(){
+  /* canvas atmosphere */
+  const c=document.getElementById('fx');const ctx=c.getContext('2d');
+  let w,h,dpr;const stars=[],smoke=[];
+  function resize(){
+    dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;
+    c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);stars.length=0;smoke.length=0;
+    for(let i=0;i<35;i++) stars.push({x:Math.random()*w,y:Math.random()*h,z:Math.random(),s:Math.random()*1.1});
+    for(let i=0;i<50;i++) smoke.push(mk(true));
+  }
+  function mk(r){return{x:Math.random()*w,y:r?Math.random()*h:h+40,r:50+Math.random()*100,vy:-(.2+Math.random()*.5),vx:(Math.random()-.5)*.3,a:.02+Math.random()*.03,life:0,max:350+Math.random()*400}}
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    const g=ctx.createRadialGradient(w*.5,h*.15,0,w*.5,h*.2,h*.45);
+    g.addColorStop(0,'rgba(0,120,160,0.08)');g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    for(const s of stars){ctx.fillStyle='rgba(200,220,255,'+(0.2+s.z*0.6)+')';ctx.fillRect(s.x,s.y,s.s,s.s);s.y+=0.05+s.z*0.12;if(s.y>h){s.y=0;s.x=Math.random()*w}}
+    for(const p of smoke){
+      p.life++;p.y+=p.vy;p.x+=p.vx+Math.sin(p.life*.012)*.2;
+      let al=p.a;if(p.life<50)al*=p.life/50;if(p.life>p.max-60)al*=(p.max-p.life)/60;
+      const rg=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      rg.addColorStop(0,'rgba(100,140,180,'+al+')');rg.addColorStop(.5,'rgba(40,60,100,'+(al*.3)+')');rg.addColorStop(1,'transparent');
+      ctx.fillStyle=rg;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      if(p.life>p.max||p.y<-p.r)Object.assign(p,mk(false));
+    }
+    requestAnimationFrame(tick);
+  }
+  resize();tick();addEventListener('resize',resize);
+
+  /* invention: myth/tech word morph */
+  const words=['PROTOGONOS','FIRST LIGHT','CHRONOS LOCK','SEALED EMISSION','ORPHIC MACHINE','TIMED EMERGENCE','SILVER EGG','BASE MAINNET'];
+  let wi=0;
+  setInterval(()=>{wi=(wi+1)%words.length;const el=document.getElementById('morph');el.style.opacity='0';setTimeout(()=>{el.textContent=words[wi];el.style.opacity='1'},200)},2800);
+  document.getElementById('morph').style.transition='opacity .2s';
+
+  /* invention: observation signal */
+  const lines=[
+    'spectral shell integrity nominal',
+    'chronos gate: closed · awaiting KHAOS epoch',
+    'liquidity path: armed · not yet singing',
+    'orphic residue detected in naming layer',
+    'observer count: local only · no oracle cult',
+    'egg surface: frost pattern stable',
+    'warning: do not invent a second opening',
+    'myth ↔ machine dictionary synchronized'
+  ];
+  let li=0;
+  setInterval(()=>{li=(li+1)%lines.length;document.getElementById('signal').textContent='…'+lines[li]+'…'},3200);
+
+  /* invention: terminal log */
+  const log=[
+    ['INIT','containment theatre online'],
+    ['MYTH','protogonos mapped to fixed supply'],
+    ['TIME','khaos=2026-12-21T20:50:00Z'],
+    ['TIME','transfer=2026-12-23T20:50:00Z'],
+    ['SYS','rewards require dual review'],
+    ['SYS','legacy cores marked unsupported'],
+    ['NOTE','this is not a meme page with a countdown sticker'],
+    ['NOTE','the product is the wait']
+  ];
+  const term=document.getElementById('term');
+  let ti=0;
+  function pushTerm(){
+    if(ti>=log.length){term.innerHTML='';ti=0}
+    const [k,v]=log[ti++];
+    const div=document.createElement('div');
+    div.innerHTML='<span>['+k+']</span> '+v;
+    term.appendChild(div);
+    if(term.children.length>6) term.removeChild(term.firstChild);
+  }
+  pushTerm();setInterval(pushTerm,2600);
+  setInterval(()=>{
+    const n=new Date();
+    document.getElementById('termClock').textContent=n.toISOString().slice(11,19)+'Z';
+  },1000);
+
+  /* invention: KHAOS chronometer */
+  const KHAOS=Date.UTC(2026,11,21,20,50,0);
+  const START=Date.UTC(2026,8,10,0,0,0); // deploy era approx
+  function chrono(){
+    const now=Date.now();
+    const left=Math.max(0,KHAOS-now);
+    const days=Math.ceil(left/86400000);
+    document.getElementById('chronoDays').textContent=days;
+    const total=KHAOS-START, done=Math.min(1,Math.max(0,(now-START)/total));
+    const circ=97.4;
+    document.getElementById('chronoProg').style.strokeDashoffset=(circ*(1-done)).toFixed(2);
+    if(left<=0) document.getElementById('eggState').textContent='STATE · UNSEAL WINDOW';
+  }
+  chrono();setInterval(chrono,60000);
+
+  /* invention: chamber reacts to presence */
+  const chamber=document.getElementById('chamber');
+  const egg=document.getElementById('egg');
+  document.addEventListener('mousemove',e=>{
+    const r=chamber.getBoundingClientRect();
+    const cx=r.left+r.width/2, cy=r.top+r.height/2;
+    const d=Math.hypot(e.clientX-cx,e.clientY-cy);
+    if(d<220){chamber.classList.add('hot');egg.style.filter='drop-shadow(0 0 28px rgba(0,220,255,.45))'}
+    else {chamber.classList.remove('hot');egg.style.filter='';}
+  });
+
+  /* lexicon flip */
+  const pairs=[
+    ['MYTH','Night','MACHINE','Pre-window'],
+    ['MYTH','Chronos','MACHINE','Block time'],
+    ['MYTH','Egg','MACHINE','Vaulted supply'],
+    ['MYTH','First light','MACHINE','KHAOS open']
+  ];
+  const lex=document.getElementById('lexicon');
+  if(lex){
+    lex.innerHTML='';
+    pairs.forEach((p,i)=>{
+      const d=document.createElement('div');d.className='lex';
+      d.innerHTML='<div class="a">'+p[0]+'</div><div class="b">'+p[1]+'</div>';
+      d.addEventListener('mouseenter',()=>{d.querySelector('.a').textContent=p[2];d.querySelector('.b').textContent=p[3]});
+      d.addEventListener('mouseleave',()=>{d.querySelector('.a').textContent=p[0];d.querySelector('.b').textContent=p[1]});
+      lex.appendChild(d);
+    });
+  }
+})();
+</script>
 </body>
 </html>
+
