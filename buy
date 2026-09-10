@@ -97,3 +97,4 @@ $('btnBuy').onclick=async()=>{
 boot();
 </script>
 </body></html>
+ 
