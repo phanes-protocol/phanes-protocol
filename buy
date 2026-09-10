@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PHANES RC11 — Buy</title>
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#03050a;color:#eef3fb}
+.wrap{max-width:28rem;margin:0 auto;padding:1.5rem}
+.card{border:1px solid rgba(110,231,255,.16);background:#0c111a;border-radius:14px;padding:1.1rem;margin:1rem 0}
+code{color:#6ee7ff;font-size:.75rem;word-break:break-all}
+.row{display:flex;justify-content:space-between;margin:.35rem 0;font-size:.9rem}
+.muted{color:#8b95a8}button{width:100%;margin-top:.6rem;padding:.75rem;border:0;border-radius:10px;background:#1a6b8a;color:#fff;font-weight:600;cursor:pointer}
+button:disabled{opacity:.45}input{width:100%;padding:.65rem;border-radius:8px;border:1px solid rgba(110,231,255,.16);background:#060a12;color:#fff}
+.err{color:#ff6b6b;font-size:.85rem;margin-top:.5rem;white-space:pre-wrap}.ok{color:#3dd68c}
+</style></head>
+<body>
+<div class="wrap">
+<h1 style="letter-spacing:.12em;font-weight:500">PHANES RC11</h1>
+<p class="muted">Base · 5% founder · 95% pool seed · armed</p>
+<div class="card">
+<div class="muted">Core</div>
+<code>0xf2005da8a244012b324fC3E183f4D89626D0B000</code>
+<div class="row"><span class="muted">Armed</span><span id="armed">—</span></div>
+<div class="row"><span class="muted">Stage</span><span id="stage">—</span></div>
+<div class="row"><span class="muted">PoolSeed</span><span id="seed" style="font-size:.7rem;word-break:break-all">—</span></div>
+<button id="btnConnect" type="button">Connect wallet</button>
+</div>
+<div class="card">
+<label class="muted">Max USDC</label>
+<input id="maxUsdc" placeholder="e.g. 50"/>
+<div class="row"><span class="muted">Quote PHN</span><span id="qPhn">—</span></div>
+<div class="row"><span class="muted">Quote USDC</span><span id="qUsd">—</span></div>
+<button id="btnQuote" disabled>Refresh quote</button>
+<button id="btnApprove" disabled>Approve USDC</button>
+<button id="btnBuy" disabled>Buy</button>
+<div id="status" class="err"></div>
+</div>
+<p class="muted" style="font-size:.8rem">After buys fund PoolSeed, anyone can call <code>seedUniswapV3</code> on PoolSeed to mint locked Uniswap V3 liquidity.</p>
+</div>
+<script type="module">
+import { BrowserProvider, Contract, parseUnits, formatUnits, JsonRpcProvider } from 'https://cdn.jsdelivr.net/npm/ethers@6.13.4/+esm';
+const CORE='0xf2005da8a244012b324fC3E183f4D89626D0B000';
+const USDC='0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const abi=['function launchArmed() view returns (bool)','function currentIssuanceStage() view returns (uint8)','function poolSeed() view returns (address)','function quoteForStage(uint8,uint256) view returns (uint256,uint256)','function buy(uint8,uint256,uint256,uint64) returns (uint256,uint256)'];
+const erc=['function approve(address,uint256) returns (bool)'];
+const $ = id=>document.getElementById(id);
+const status=(m,ok=false)=>{const e=$('status');e.textContent=m||'';e.className=ok?'ok':'err'};
+let provider,signer,core,usdc;
+async function boot(){
+  const rpc=new JsonRpcProvider('https://mainnet.base.org');
+  const c=new Contract(CORE,abi,rpc);
+  $('armed').textContent=(await c.launchArmed())?'yes':'no';
+  $('stage').textContent=String(await c.currentIssuanceStage());
+  $('seed').textContent=await c.poolSeed();
+}
+$('btnConnect').onclick=async()=>{
+  try{
+    provider=new BrowserProvider(window.ethereum);
+    await provider.send('eth_requestAccounts',[]);
+    const net=await provider.getNetwork();
+    if(net.chainId!==8453n) await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x2105'}]});
+    signer=await provider.getSigner();
+    core=new Contract(CORE,abi,signer);
+    usdc=new Contract(USDC,erc,signer);
+    $('btnQuote').disabled=false;$('btnApprove').disabled=false;$('btnBuy').disabled=false;
+    status('Connected',true); await boot();
+  }catch(e){status(e.shortMessage||e.message)}
+};
+$('btnQuote').onclick=async()=>{
+  try{
+    const max=parseUnits($('maxUsdc').value||'0',6);
+    const stage=await core.currentIssuanceStage();
+    const [spent,got]=await core.quoteForStage(stage,max);
+    $('qPhn').textContent=formatUnits(got,4)+' PHN';
+    $('qUsd').textContent=formatUnits(spent,6)+' USDC';
+    status('Quote ok',true);
+  }catch(e){status(e.shortMessage||e.message)}
+};
+$('btnApprove').onclick=async()=>{
+  try{
+    const max=parseUnits($('maxUsdc').value||'0',6);
+    status('Approving…'); await (await usdc.approve(CORE,max)).wait(); status('Approved',true);
+  }catch(e){status(e.shortMessage||e.message)}
+};
+$('btnBuy').onclick=async()=>{
+  try{
+    const max=parseUnits($('maxUsdc').value||'0',6);
+    const stage=await core.currentIssuanceStage();
+    const [,got]=await core.quoteForStage(stage,max);
+    const min=got*99n/100n;
+    const dl=BigInt(Math.floor(Date.now()/1000)+600);
+    status('Buying…');
+    const tx=await core.buy(stage,max,min,dl);
+    await tx.wait(); status('Buy confirmed '+tx.hash,true); await boot();
+  }catch(e){status(e.shortMessage||e.message)}
+};
+boot();
+</script>
+</body></html>
