@@ -1,142 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>PHANES — Governed by time</title>
-<meta name="description" content="PHANES. Fixed-supply emission on Base. Primary buys seed locked liquidity."/>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PHANES RC11 — Buy</title>
 <style>
-:root{
-  --bg:#03050a;--text:#eef3fb;--muted:#8b95a8;--line:rgba(120,160,255,.14);
-  --cyan:#6ee7ff;--violet:#8b5cff;--card:rgba(10,14,24,.72);--glow:rgba(110,231,255,.18);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.5;
-  background-image:
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(139,92,255,.22), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(110,231,255,.08), transparent 45%);
-}
-a{color:var(--cyan);text-decoration:none}a:hover{color:#fff}
-.nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 4vw;border-bottom:1px solid var(--line);background:rgba(3,5,10,.78);backdrop-filter:blur(14px)}
-.brand{letter-spacing:.32em;font-size:.78rem;text-transform:uppercase}
-.brand small{display:block;color:var(--muted);letter-spacing:.1em;font-size:.62rem;margin-top:.15rem;text-transform:none}
-.navlinks{display:flex;gap:1.4rem;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
-.navlinks a{color:var(--muted)}.cta{border:1px solid rgba(110,231,255,.45);color:var(--cyan);
-  padding:.55rem 1rem;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;border-radius:999px}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;align-items:center;padding:4rem 4vw 3rem;min-height:80vh}
-.kicker{color:var(--cyan);letter-spacing:.28em;font-size:.72rem;text-transform:uppercase;margin-bottom:1rem}
-h1{font-size:clamp(3rem,7vw,5.2rem);font-weight:500;letter-spacing:.08em;line-height:1.02;margin-bottom:1rem}
-.lead{color:var(--muted);max-width:34rem;font-size:1.05rem;line-height:1.7}
-.panel{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:1.4rem 1.5rem}
-.panel h2{font-size:.7rem;letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
-.panel .date{font-size:1.7rem;margin:.35rem 0 .2rem}
-.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin:1rem 0}
-.cd div{background:rgba(0,0,0,.4);border:1px solid var(--line);padding:.65rem .2rem;text-align:center;border-radius:10px}
-.cd strong{display:block;font-size:1.15rem;color:var(--cyan)}
-.cd span{font-size:.58rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-.checks{font-size:.82rem;color:var(--muted);line-height:1.85}
-.checks i{color:var(--cyan);font-style:normal;margin-right:.4rem}
-section{padding:3.5rem 4vw;border-top:1px solid var(--line)}
-.section-label{color:var(--muted);letter-spacing:.28em;font-size:.68rem;text-transform:uppercase;margin-bottom:.75rem}
-section h3{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:500;margin-bottom:1rem;max-width:40rem}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.3rem}
-.card{border:1px solid var(--line);background:rgba(8,12,20,.65);border-radius:16px;padding:1.2rem}
-.card .n{color:var(--cyan);font-size:.68rem;letter-spacing:.2em;margin-bottom:.5rem}
-.card h4{margin-bottom:.4rem}.card p{color:var(--muted);font-size:.88rem;line-height:1.65}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.2rem}
-.metric{border:1px solid var(--line);border-radius:14px;padding:1.1rem;text-align:center;background:rgba(0,0,0,.25)}
-.metric strong{display:block;font-size:1.8rem;color:var(--cyan)}.metric span{font-size:.7rem;letter-spacing:.14em;color:var(--muted)}
-.addr{margin-top:1rem;padding:1rem;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.35);
-  font-family:ui-monospace,monospace;font-size:.78rem;word-break:break-all}
-.addr span{display:block;color:var(--muted);font-size:.62rem;letter-spacing:.14em;margin-bottom:.35rem;font-family:inherit}
-.note{margin-top:1rem;color:var(--muted);font-size:.85rem;max-width:40rem;line-height:1.65}
-.foot{padding:1.4rem 4vw 2rem;border-top:1px solid var(--line);font-size:.68rem;letter-spacing:.1em;color:var(--muted);
-  display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between}
-@media(max-width:960px){.hero,.grid3,.split{grid-template-columns:1fr}.navlinks{display:none}}
-</style>
-</head>
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#03050a;color:#eef3fb}
+.wrap{max-width:28rem;margin:0 auto;padding:1.5rem}
+.card{border:1px solid rgba(110,231,255,.16);background:#0c111a;border-radius:14px;padding:1.1rem;margin:1rem 0}
+code{color:#6ee7ff;font-size:.75rem;word-break:break-all}
+.row{display:flex;justify-content:space-between;margin:.35rem 0;font-size:.9rem}
+.muted{color:#8b95a8}button{width:100%;margin-top:.6rem;padding:.75rem;border:0;border-radius:10px;background:#1a6b8a;color:#fff;font-weight:600;cursor:pointer}
+button:disabled{opacity:.45}input{width:100%;padding:.65rem;border-radius:8px;border:1px solid rgba(110,231,255,.16);background:#060a12;color:#fff}
+.err{color:#ff6b6b;font-size:.85rem;margin-top:.5rem;white-space:pre-wrap}.ok{color:#3dd68c}
+</style></head>
 <body>
-<header class="nav">
-  <div class="brand">PHANES<small>A protocol governed by time</small></div>
-  <nav class="navlinks">
-    <a href="/buy/">Buy</a>
-    <a href="#liquidity">Liquidity</a>
-    <a href="#schedule">Schedule</a>
-    <a href="#contracts">Contracts</a>
-  </nav>
-  <a class="cta" href="/buy/">Primary sale</a>
-</header>
-
-<section class="hero">
-  <div>
-    <p class="kicker">Base · Fixed supply · Buy-funded liquidity</p>
-    <h1>PHANES</h1>
-    <p class="lead">Primary purchases are meant to build the market: most of each buy seeds locked Uniswap liquidity. A small, explicit cut supports the founder.</p>
-  </div>
-  <div class="panel" id="buy">
-    <h2>Next supported sale model (RC11)</h2>
-    <div class="date">5% / 95%</div>
-    <div class="checks" style="margin-top:.8rem">
-      <div><i>✓</i> <strong>5%</strong> of buy USDC → founder</div>
-      <div><i>✓</i> <strong>95%</strong> of buy USDC + matching PHN → Uniswap pool</div>
-      <div><i>✓</i> LP position non-withdrawable / time-locked</div>
-      <div><i>✓</i> Fixed 21,000,000 PHN supply</div>
-    </div>
-    <p class="note">RC11 is live on Base with 5/95 buy routing into PoolSeed (Uniswap V3 seed function wired). Primary buys open on the published KHAOS schedule.</p>
-  </div>
-</section>
-
-<section id="liquidity">
-  <p class="section-label">01 · Liquidity design</p>
-  <h3>Curve buys should deepen the pool, not fill a dead vault.</h3>
-  <div class="split">
-    <div class="metric"><strong>5%</strong><span>FOUNDER USDC</span></div>
-    <div class="metric"><strong>95%</strong><span>LOCKED POOL SEED</span></div>
-  </div>
-  <div class="grid3">
-    <div class="card"><div class="n">/ 01</div><h4>Founder cut</h4><p>Five percent of each primary purchase in USDC. Stated up front — not hidden.</p></div>
-    <div class="card"><div class="n">/ 02</div><h4>Market seed</h4><p>Ninety-five percent of buy USDC is paired with matching PHN into a Uniswap pool on Base.</p></div>
-    <div class="card"><div class="n">/ 03</div><h4>Locked LP</h4><p>Protocol liquidity is non-withdrawable or time-locked so it cannot be pulled as a soft rug.</p></div>
-  </div>
-  <div class="grid3" style="margin-top:1rem">
-    <div class="card"><div class="n">/ 04</div><h4>Reward releases</h4><p>Security and ecosystem PHN leave the rewards vault only through campaigns, reviewer checks, and recipient claims — not a free founder withdraw.</p></div>
-    <div class="card"><div class="n">/ 05</div><h4>RC11 only</h4><p>The supported public sale and liquidity path points exclusively to the armed RC11 Base mainnet deployment.</p></div>
-    <div class="card"><div class="n">/ 06</div><h4>Pool seed</h4><p>PoolSeed.seedUniswapV3 can be called once buy-funded USDC+PHN balances exist; the LP NFT goes to the permanent lock.</p></div>
-  </div>
-</section>
-
-<section id="schedule">
-  <p class="section-label">02 · Schedule intent</p>
-  <h3>Time still governs the stages.</h3>
-  <div class="grid3">
-    <div class="card"><div class="n">KHAOS</div><h4>Opening</h4><p>Primary issuance begins on the published schedule. Exact RC11 timestamps ship with the RC11 deploy record.</p></div>
-    <div class="card"><div class="n">POOL</div><h4>Buy → liquidity</h4><p>Each primary buy routes 95% USDC + matching PHN toward the locked pool under RC11 rules.</p></div>
-    <div class="card"><div class="n">MARKET</div><h4>Secondary</h4><p>Once transfers and pool depth exist, PHN can trade on open Base markets — separate from the curve.</p></div>
-  </div>
-</section>
-
-<section id="contracts">
-  <p class="section-label">03 · Contracts</p>
-  <h3>Know which address is which.</h3>
-  <div class="addr">
-    <span>RC11 SUPPORTED CORE · BASE MAINNET · ARMED</span>
-    <a href="https://basescan.org/address/0xf2005da8a244012b324fC3E183f4D89626D0B000" target="_blank" rel="noopener">0xf2005da8a244012b324fC3E183f4D89626D0B000</a>
-  </div>
-  <div class="addr">
-    <span>RC11 POOLSEED · BASE MAINNET</span>
-    <a href="https://basescan.org/address/0x0dC964cA2f2672C04cFc1D1139446497799d83CD" target="_blank" rel="noopener">0x0dC964cA2f2672C04cFc1D1139446497799d83CD</a>
-  </div>
-  <p class="note">The public website and sale interface are configured exclusively for RC11. No legacy deployment is used for the supported sale path.</p>
-  <p class="note">Security contact: <a href="mailto:phanessecurity@proton.me">phanessecurity@proton.me</a></p>
-</section>
-
-<footer class="foot">
-  <span>PHANES · Base</span>
-  <span>RC11 live · 5% founder · 95% locked pool</span>
-</footer>
-</body>
-</html>
+<div class="wrap">
+<h1 style="letter-spacing:.12em;font-weight:500">PHANES RC11</h1>
+<p class="muted">Base · 5% founder · 95% pool seed · armed</p>
+<div class="card">
+<div class="muted">Core</div>
+<code>0xf2005da8a244012b324fC3E183f4D89626D0B000</code>
+<div class="row"><span class="muted">Armed</span><span id="armed">—</span></div>
+<div class="row"><span class="muted">Stage</span><span id="stage">—</span></div>
+<div class="row"><span class="muted">PoolSeed</span><span id="seed" style="font-size:.7rem;word-break:break-all">—</span></div>
+<button id="btnConnect" type="button">Connect wallet</button>
+</div>
+<div class="card">
+<label class="muted">Max USDC</label>
+<input id="maxUsdc" placeholder="e.g. 50"/>
+<div class="row"><span class="muted">Quote PHN</span><span id="qPhn">—</span></div>
+<div class="row"><span class="muted">Quote USDC</span><span id="qUsd">—</span></div>
+<button id="btnQuote" disabled>Refresh quote</button>
+<button id="btnApprove" disabled>Approve USDC</button>
+<button id="btnBuy" disabled>Buy</button>
+<div id="status" class="err"></div>
+</div>
+<p class="muted" style="font-size:.8rem">After buys fund PoolSeed, anyone can call <code>seedUniswapV3</code> on PoolSeed to mint locked Uniswap V3 liquidity.</p>
+</div>
+<script type="module">
+import { BrowserProvider, Contract, parseUnits, formatUnits, JsonRpcProvider } from 'https://cdn.jsdelivr.net/npm/ethers@6.13.4/+esm';
+const CORE='0xf2005da8a244012b324fC3E183f4D89626D0B000';
+const USDC='0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const abi=['function launchArmed() view returns (bool)','function currentIssuanceStage() view returns (uint8)','function poolSeed() view returns (address)','function quoteForStage(uint8,uint256) view returns (uint256,uint256)','function buy(uint8,uint256,uint256,uint64) returns (uint256,uint256)'];
+const erc=['function approve(address,uint256) returns (bool)'];
+const $ = id=>document.getElementById(id);
+const status=(m,ok=false)=>{const e=$('status');e.textContent=m||'';e.className=ok?'ok':'err'};
+let provider,signer,core,usdc;
+async function boot(){
+  const rpc=new JsonRpcProvider('https://mainnet.base.org');
+  const c=new Contract(CORE,abi,rpc);
+  $('armed').textContent=(await c.launchArmed())?'yes':'no';
+  $('stage').textContent=String(await c.currentIssuanceStage());
+  $('seed').textContent=await c.poolSeed();
+}
+$('btnConnect').onclick=async()=>{
+  try{
+    provider=new BrowserProvider(window.ethereum);
+    await provider.send('eth_requestAccounts',[]);
+    const net=await provider.getNetwork();
+    if(net.chainId!==8453n) await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x2105'}]});
+    signer=await provider.getSigner();
+    core=new Contract(CORE,abi,signer);
+    usdc=new Contract(USDC,erc,signer);
+    $('btnQuote').disabled=false;$('btnApprove').disabled=false;$('btnBuy').disabled=false;
+    status('Connected',true); await boot();
+  }catch(e){status(e.shortMessage||e.message)}
+};
+$('btnQuote').onclick=async()=>{
+  try{
+    const max=parseUnits($('maxUsdc').value||'0',6);
+    const stage=await core.currentIssuanceStage();
+    const [spent,got]=await core.quoteForStage(stage,max);
+    $('qPhn').textContent=formatUnits(got,4)+' PHN';
+    $('qUsd').textContent=formatUnits(spent,6)+' USDC';
+    status('Quote ok',true);
+  }catch(e){status(e.shortMessage||e.message)}
+};
+$('btnApprove').onclick=async()=>{
+  try{
+    const max=parseUnits($('maxUsdc').value||'0',6);
+    status('Approving…'); await (await usdc.approve(CORE,max)).wait(); status('Approved',true);
+  }catch(e){status(e.shortMessage||e.message)}
+};
+$('btnBuy').onclick=async()=>{
+  try{
+    const max=parseUnits($('maxUsdc').value||'0',6);
+    const stage=await core.currentIssuanceStage();
+    const [,got]=await core.quoteForStage(stage,max);
+    const min=got*99n/100n;
+    const dl=BigInt(Math.floor(Date.now()/1000)+600);
+    status('Buying…');
+    const tx=await core.buy(stage,max,min,dl);
+    await tx.wait(); status('Buy confirmed '+tx.hash,true); await boot();
+  }catch(e){status(e.shortMessage||e.message)}
+};
+boot();
+</script>
+</body></html>
